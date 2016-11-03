@@ -18,12 +18,12 @@ RUN tar xf "${GCLOUD_SDK_FILENAME}" && \
     sed -i -e 's/true/false/' /google-cloud-sdk/lib/googlecloudsdk/core/config.json; \
     /google-cloud-sdk/bin/gcloud components install -q kubectl;
 
-ADD cf-deploy-kubernetes.sh /opt/codefresh/bin/cf-deploy-kubernetes.sh
+ADD cf-deploy-kubernetes.sh /cf-deploy-kubernetes
 
 # Set the default path to include all the commands
 RUN \
     ln -s /google-cloud-sdk/bin/kubectl /usr/local/bin/kubectl && \
-    chmod +x /opt/codefresh/bin/cf-deploy-kubernetes.sh ; ln -s /opt/codefresh/bin/cf-deploy-kubernetes.sh /usr/local/bin/cf-deploy-kubernetes
+    chmod +x /cf-deploy-kubernetes
 
-ENTRYPOINT ["/usr/local/bin/cf-deploy-kubernetes"]
+ENTRYPOINT ["/cf-deploy-kubernetes"]
 
