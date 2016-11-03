@@ -2,7 +2,7 @@
 
 readonly DEFAULT_NAMESPACE=default
 
-deployment_file=${1:=deployment.yml}
+deployment_file=${1:-deployment.yml}
 
 [ -z "$KUBERNETES_USER" ] && echo "Please set KUBERNETES_USER" && exit 1;
 [ -z "$KUBERNETES_PASSWORD" ] && echo "Please set KUBERNETES_PASSWORD" && exit 1;

@@ -25,5 +25,5 @@ RUN \
     ln -s /google-cloud-sdk/bin/kubectl /usr/local/bin/kubectl && \
     chmod +x /cf-deploy-kubernetes
 
-ENTRYPOINT ["/cf-deploy-kubernetes"]
+CMD ["bash"]
 
