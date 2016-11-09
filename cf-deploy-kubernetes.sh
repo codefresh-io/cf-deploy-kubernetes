@@ -4,6 +4,8 @@ readonly DEFAULT_NAMESPACE=default
 
 deployment_file=${1:-deployment.yml}
 
+: ${KUBERNETES_DEPLOYMENT_ATTEMPTS:=10}
+
 [ -z "$KUBERNETES_USER" ] && echo "Please set KUBERNETES_USER" && exit 1;
 [ -z "$KUBERNETES_PASSWORD" ] && echo "Please set KUBERNETES_PASSWORD" && exit 1;
 [ -z "$KUBERNETES_SERVER" ] && echo "Please set KUBERNETES_SERVER" && exit 1;
@@ -25,7 +27,7 @@ echo "---> Waiting for a succesful deployment status..."
 
 available=1
 next_wait_time=0
-until [ $available -eq 0 -o $next_wait_time -eq 10 ]; do
+until [ $available -eq 0 -o $next_wait_time -eq $KUBERNETES_DEPLOYMENT_ATTEMPTS ]; do
 
 	# Unfortunately, we can't use the `kubectl rollout status` command at the moment.
 	# The command won't wait until all the replicas are available until the following
