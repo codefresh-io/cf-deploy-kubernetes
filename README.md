@@ -31,5 +31,6 @@ API. Mandatory.
 5. DOCKER_IMAGE_TAG - The docker tag to use for the deployment. Requires the
 `deployment.yml` file to specify a `$DOCKER_IMAGE_TAG` variable so it can be
 substitutes at deployment time.
+6. FORCE_RE_CREATE_RESOURCE - Will force re-creation of the deployment
 
 

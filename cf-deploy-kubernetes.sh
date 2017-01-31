@@ -20,8 +20,15 @@ kubectl config set-cluster foo.kubernetes.com --insecure-skip-tls-verify=true --
 kubectl config set-context foo.kubernetes.com/deployer --user=deployer --namespace=$DEFAULT_NAMESPACE --cluster=foo.kubernetes.com
 kubectl config use-context foo.kubernetes.com/deployer
 
-echo "---> Submittinig a deployment to Kubernetes..."
-kubectl apply -f $deployment_file
+
+# Check if the cloned dir already exists from previous builds
+if [ "$FORCE_RE_CREATE_RESOURCE" == "true" ]; then
+    echo "---> Submittinig a deployment to Kubernetes with --force flag..."
+    kubectl apply -f $deployment_file --force
+else
+    echo "---> Submittinig a deployment to Kubernetes..."
+    kubectl apply -f $deployment_file
+fi
 
 echo "---> Waiting for a succesful deployment status..."
 
