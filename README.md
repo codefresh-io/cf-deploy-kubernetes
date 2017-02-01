@@ -22,8 +22,8 @@ parameters and configuration of your application.
 
 The following env variables control the deployment configuration:
 
-1. KUBERNETES_DEPLOYMENT_ATTEMPTS - How many times the deployment process should
-check for a succesful status before failing. Defaults is 10.
+1. KUBERNETES_DEPLOYMENT_TIMEOUT - How much to wait for a successful deployment
+before failing the build. Defaults to 120 (secs).
 2. KUBERNETES_USER - The user for the Kubernetes cluster. Mandatory.
 3. KUBERNETES_PASSWORD - The password for the Kubernetes cluster. Mandatory.
 4. KUBERNETES_SERVER - The server (HTTPS endpoint) of the Kubernetes cluster's

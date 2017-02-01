@@ -4,7 +4,7 @@ readonly DEFAULT_NAMESPACE=default
 
 deployment_file=${1:-deployment.yml}
 
-: ${KUBERNETES_DEPLOYMENT_ATTEMPTS:=10}
+: ${KUBERNETES_DEPLOYMENT_TIMEOUT:=120}
 
 [ -z "$KUBERNETES_USER" ] && echo "Please set KUBERNETES_USER" && exit 1;
 [ -z "$KUBERNETES_PASSWORD" ] && echo "Please set KUBERNETES_PASSWORD" && exit 1;
@@ -32,24 +32,6 @@ fi
 
 echo "---> Waiting for a succesful deployment status..."
 
-available=1
-next_wait_time=0
-until [ $available -eq 0 -o $next_wait_time -eq $KUBERNETES_DEPLOYMENT_ATTEMPTS ]; do
-
-	# Unfortunately, we can't use the `kubectl rollout status` command at the moment.
-	# The command won't wait until all the replicas are available until the following
-	# pull request will be merged:
-	# https://github.com/kubernetes/kubernetes/pull/31499
-	status=$(kubectl get -f $deployment_file -o jsonpath="{.status.Replicas} {.status.AvailableReplicas} {.status.UpdatedReplicas}")
-	updatedReplicas=$(echo $status | awk '{print $3}')
-	availableReplicas=$(echo $status | awk '{print $2}')
-	replicas=$(echo $status | awk '{print $1}')
-
-	echo "---> Current deployment status: updatedReplicas: $updatedReplicas, availableReplicas: $availableReplicas, totalReplicas: $replicas"
-	[ $updatedReplicas -eq $replicas -a $availableReplicas -eq $replicas ] && available=0 || available=1
-
-	sleep $(( next_wait_time++ ))
-done
-
-exit $available
+timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl rollout status -f $deployment_file
+exit $?
 
