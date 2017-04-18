@@ -13,6 +13,8 @@ deployment_file=${1:-deployment.yml}
 
 [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
 sed -i "s/\$DOCKER_IMAGE_TAG/$DOCKER_IMAGE_TAG/g" $deployment_file
+sed -i "s/\$UNIQ_ID/$(date '+%y-%m-%d_%H:%M:%S')/g" $deployment_file
+
 
 echo "---> Setting up Kubernetes credentials..."
 kubectl config set-credentials deployer --username=$KUBERNETES_USER --password=$KUBERNETES_PASSWORD
