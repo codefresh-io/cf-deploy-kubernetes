@@ -19,11 +19,13 @@ RUN tar xf "${GCLOUD_SDK_FILENAME}" && \
     /google-cloud-sdk/bin/gcloud components install -q kubectl;
 
 ADD cf-deploy-kubernetes.sh /cf-deploy-kubernetes
+ADD template.sh /template.sh
 
 # Set the default path to include all the commands
 RUN \
     ln -s /google-cloud-sdk/bin/kubectl /usr/local/bin/kubectl && \
-    chmod +x /cf-deploy-kubernetes
+    chmod +x /cf-deploy-kubernetes && \
+    chmod +x /template.sh
 
 CMD ["bash"]
 
