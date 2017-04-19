@@ -63,9 +63,10 @@ version: '1.0'
 steps:
   build:
     type: build
-    working-directory: ${{initial-clone}}
-    image-name: $docker-image
-    tag: ${{CF_BRANCH}}
+    dockerfile: Dockerfile
+    image_name: myrepo/apisvc
+    tag: '${{CF_BRANCH}}'
+    
   push:
     type: push
     candidate: ${{build}}
