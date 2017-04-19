@@ -19,7 +19,7 @@ deployment_file=${1:-deployment.yml}
 [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
 
 
-DEPLOYMENT_FILE=$(date '+%y-%m-%d_%H:%M:%S')-${deployment_file}
+DEPLOYMENT_FILE=${deployment_file}-$(date '+%y-%m-%d_%H-%M-%S').yml
 $(dirname $0)/template.sh "$deployment_file" > "$DEPLOYMENT_FILE" || fatal "Failed to apply deployment template on $deployment_file"
 
 
