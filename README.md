@@ -3,9 +3,6 @@
 This is the source code for the `codefresh/cf-deploy-kubernetes` container.
 This container is used to demonstrate a Kubernetes deployment using Codefresh.io
 
-For a complete example, check:
-https://github.com/codefresh-io/cf-deploy-kubernetes-demo
-
 # Assumptions
 
 The deployment script makes the following assumptions about your application and
@@ -30,7 +27,7 @@ before failing the build. Defaults to 120 (secs).
 4. KUBERNETES_SERVER - The server (HTTPS endpoint) of the Kubernetes cluster's
 API. Mandatory.
 
-# Usage in codefresh
+# Usage in codefresh.io
 
 ### deployment.yml
 
