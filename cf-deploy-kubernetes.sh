@@ -35,5 +35,5 @@ kubectl apply -f "$DEPLOYMENT_FILE" || fatal "Deployment Failed"
 
 echo "---> Waiting for a succesful deployment status..."
 
-timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl rollout status -f $deployment_file
+timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl --namespace=$DEFAULT_NAMESPACE rollout status -f $deployment_file
 exit $?
