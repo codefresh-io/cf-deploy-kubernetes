@@ -5,7 +5,7 @@ fatal() {
    exit 1
 }
 
-readonly DEFAULT_NAMESPACE=default
+readonly DEFAULT_NAMESPACE=${KUBERNETES_NAMESPACE:-default}
 
 deployment_file=${1:-deployment.yml}
 
@@ -37,4 +37,3 @@ echo "---> Waiting for a succesful deployment status..."
 
 timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl rollout status -f $deployment_file
 exit $?
-
