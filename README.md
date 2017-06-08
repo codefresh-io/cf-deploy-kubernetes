@@ -73,9 +73,8 @@ steps:
     tag: ${{CF_BRANCH}}
 
   deploy-to-kubernetes:
-    image: codefresh/cf-deploy-kubernetes
-    tag: latest
-    working-directory: ${{initial-clone}}
+    image: codefresh/cf-deploy-kubernetes:latest
+    working-directory: ${{main_clone}}
     commands:
       - /cf-deploy-kubernetes deployment.yml
     environment:
