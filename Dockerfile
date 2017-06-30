@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add --no-cache python && \
+RUN apk add --no-cache python py-pip && \
     apk add --update bash
 
 ENV GCLOUD_SDK_VERSION="141.0.0"
@@ -16,7 +16,8 @@ ADD ${GCLOUD_SDK_URL} ${GCLOUD_SDK_FILENAME}
 
 RUN tar xf "${GCLOUD_SDK_FILENAME}" && \
     sed -i -e 's/true/false/' /google-cloud-sdk/lib/googlecloudsdk/core/config.json; \
-    /google-cloud-sdk/bin/gcloud components install -q kubectl;
+    /google-cloud-sdk/bin/gcloud components install -q kubectl; \
+    pip install shyaml
 
 ADD cf-deploy-kubernetes.sh /cf-deploy-kubernetes
 ADD template.sh /template.sh
@@ -28,4 +29,3 @@ RUN \
     chmod +x /template.sh
 
 CMD ["bash"]
-

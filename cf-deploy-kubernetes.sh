@@ -29,11 +29,23 @@ kubectl config set-cluster foo.kubernetes.com --insecure-skip-tls-verify=true --
 kubectl config set-context foo.kubernetes.com/deployer --user=deployer --namespace=$DEFAULT_NAMESPACE --cluster=foo.kubernetes.com
 kubectl config use-context foo.kubernetes.com/deployer
 
-echo "---> Submittinig a deployment to Kubernetes..."
-kubectl apply -f "$DEPLOYMENT_FILE" || fatal "Deployment Failed"
+KTYPE=$(cat $DEPLOYMENT_FILE | shyaml get-value kind)
 
+case $KTYPE in
+  Deployment)
+    echo "---> Submittinig a deployment to Kubernetes..."
+    kubectl apply -f "$DEPLOYMENT_FILE" || fatal "Deployment Failed"
+    timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl --namespace=$DEFAULT_NAMESPACE rollout status -f $deployment_file
+    echo "---> Waiting for a succesful deployment status..."
+  ;;
+  Job)
+    echo "---> Submittinig a job to Kubernetes..."
+    kubectl --namespace=$DEFAULT_NAMESPACE apply -f "$DEPLOYMENT_FILE" || fatal "Job Failed"
+  ;;
+  Pod)
+    echo "---> Submittinig a pod to Kubernetes..."
+    kubectl --namespace=$DEFAULT_NAMESPACE create -f "$DEPLOYMENT_FILE" || fatal "Pod Failed"
+  ;;
+esac
 
-echo "---> Waiting for a succesful deployment status..."
-
-timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl --namespace=$DEFAULT_NAMESPACE rollout status -f $deployment_file
 exit $?
