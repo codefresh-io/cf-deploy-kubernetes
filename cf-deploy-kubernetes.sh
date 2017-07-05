@@ -41,7 +41,7 @@ fi
 
 DEPLOYMENT_NAME=$(awk '/^Deployment /{a=$2}END{print a}' $KUBECTL_OBJECTS)
 
-echo "---> Submitting a deployment to Kubernetes..."
+echo "---> Submitting a deployment to Kubernetes by kubectl $KUBECTL_ACTION "
 kubectl $KUBECTL_ACTION -f "$DEPLOYMENT_FILE" || fatal "Deployment submitting Failed"
 
 if [ -n "$DEPLOYMENT_NAME" ]; then
