@@ -5,7 +5,9 @@ fatal() {
    exit 1
 }
 
-readonly DEFAULT_NAMESPACE=default
+readonly DEFAULT_NAMESPACE=${KUBERNETES_NAMESPACE:-default}
+readonly KUBECTL_ACTION=${KUBECTL_ACTION:-apply}
+[[ $KUBECTL_ACTION =~ ^(apply|create|replace)$ ]] || fatal "KUBECTL_ACTION should be one of apply|create|replace "
 
 deployment_file=${1:-deployment.yml}
 
@@ -29,12 +31,21 @@ kubectl config set-cluster foo.kubernetes.com --insecure-skip-tls-verify=true --
 kubectl config set-context foo.kubernetes.com/deployer --user=deployer --namespace=$DEFAULT_NAMESPACE --cluster=foo.kubernetes.com
 kubectl config use-context foo.kubernetes.com/deployer
 
-echo "---> Submittinig a deployment to Kubernetes..."
-kubectl apply -f "$DEPLOYMENT_FILE" || fatal "Deployment Failed"
+echo "---> Kubernetes objects to deploy in  $deployment_file :"
+KUBECTL_OBJECTS=/tmp/deployment.objects
+kubectl convert -f "$DEPLOYMENT_FILE" --local=true --no-headers=true -o=custom-columns="KIND:{.kind},NAME:{.metadata.name}" > >(tee $KUBECTL_OBJECTS) 2>${KUBECTL_OBJECTS}.errors
+if [ $? != 0 ]; then
+   cat ${KUBECTL_OBJECTS}.errors
+   fatal "Failed to parse $deployment_file "
+fi
 
+DEPLOYMENT_NAME=$(awk '/^Deployment /{a=$2}END{print a}' $KUBECTL_OBJECTS)
 
-echo "---> Waiting for a succesful deployment status..."
+echo "---> Submitting a deployment to Kubernetes by kubectl $KUBECTL_ACTION "
+kubectl $KUBECTL_ACTION -f "$DEPLOYMENT_FILE" || fatal "Deployment submitting Failed"
 
-timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl rollout status -f $deployment_file
-exit $?
+if [ -n "$DEPLOYMENT_NAME" ]; then
+    echo "---> Waiting for a successful deployment/${DEPLOYMENT_NAME} status..."
+    timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl rollout status deployment/"${DEPLOYMENT_NAME}" || fatal "Deployment Failed"
+fi
 

@@ -20,12 +20,12 @@ parameters and configuration of your application.
 
 The following env variables control the deployment configuration:
 
-1. KUBERNETES_DEPLOYMENT_TIMEOUT - How much to wait for a successful deployment
-before failing the build. Defaults to 120 (secs).
+1. KUBERNETES_DEPLOYMENT_TIMEOUT - How much to wait for a successful deployment before failing the build. Defaults to 120 (secs).
 2. KUBERNETES_USER - The user for the Kubernetes cluster. Mandatory.
 3. KUBERNETES_PASSWORD - The password for the Kubernetes cluster. Mandatory.
-4. KUBERNETES_SERVER - The server (HTTPS endpoint) of the Kubernetes cluster's
-API. Mandatory.
+4. KUBERNETES_SERVER - The server (HTTPS endpoint) of the Kubernetes cluster's API. Mandatory.
+5. KUBERNETES_NAMESPACE - The namespace to deploy
+6. KUBECTL_ACTION - means an action for `kubectl <action>`. Valid values are apply|create|replace. Default is "apply"
 
 # Usage in codefresh.io
 
