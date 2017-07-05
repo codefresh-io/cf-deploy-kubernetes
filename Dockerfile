@@ -16,8 +16,7 @@ ADD ${GCLOUD_SDK_URL} ${GCLOUD_SDK_FILENAME}
 
 RUN tar xf "${GCLOUD_SDK_FILENAME}" && \
     sed -i -e 's/true/false/' /google-cloud-sdk/lib/googlecloudsdk/core/config.json; \
-    /google-cloud-sdk/bin/gcloud components install -q kubectl; \
-    pip install shyaml
+    /google-cloud-sdk/bin/gcloud components install -q kubectl
 
 ADD cf-deploy-kubernetes.sh /cf-deploy-kubernetes
 ADD template.sh /template.sh
