@@ -6,6 +6,8 @@ fatal() {
 }
 
 readonly DEFAULT_NAMESPACE=${KUBERNETES_NAMESPACE:-default}
+readonly KUBECTL_ACTION=${KUBECTL_ACTION:-apply}
+[[ $KUBECTL_ACTION =~ ^(apply|create|replace)$ ]] || fatal "KUBECTL_ACTION should be one of apply|create|replace "
 
 deployment_file=${1:-deployment.yml}
 
@@ -29,23 +31,21 @@ kubectl config set-cluster foo.kubernetes.com --insecure-skip-tls-verify=true --
 kubectl config set-context foo.kubernetes.com/deployer --user=deployer --namespace=$DEFAULT_NAMESPACE --cluster=foo.kubernetes.com
 kubectl config use-context foo.kubernetes.com/deployer
 
-KTYPE=$(cat $DEPLOYMENT_FILE | shyaml get-value kind)
+echo "---> Kubernetes objects to deploy in  $deployment_file :"
+KUBECTL_OBJECTS=/tmp/deployment.objects
+kubectl convert -f "$DEPLOYMENT_FILE" --local=true --no-headers=true -o=custom-columns="KIND:{.kind},NAME:{.metadata.name}" > >(tee $KUBECTL_OBJECTS) 2>${KUBECTL_OBJECTS}.errors
+if [ $? != 0 ]; then
+   cat ${KUBECTL_OBJECTS}.errors
+   fatal "Failed to parse $deployment_file "
+fi
 
-case $KTYPE in
-  Deployment)
-    echo "---> Submittinig a deployment to Kubernetes..."
-    kubectl apply -f "$DEPLOYMENT_FILE" || fatal "Deployment Failed"
-    timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl --namespace=$DEFAULT_NAMESPACE rollout status -f $deployment_file
-    echo "---> Waiting for a succesful deployment status..."
-  ;;
-  Job)
-    echo "---> Submittinig a job to Kubernetes..."
-    kubectl --namespace=$DEFAULT_NAMESPACE apply -f "$DEPLOYMENT_FILE" || fatal "Job Failed"
-  ;;
-  Pod)
-    echo "---> Submittinig a pod to Kubernetes..."
-    kubectl --namespace=$DEFAULT_NAMESPACE create -f "$DEPLOYMENT_FILE" || fatal "Pod Failed"
-  ;;
-esac
+DEPLOYMENT_NAME=$(awk '/^Deployment /{a=$2}END{print a}' $KUBECTL_OBJECTS)
 
-exit $?
+echo "---> Submitting a deployment to Kubernetes..."
+kubectl $KUBECTL_ACTION -f "$DEPLOYMENT_FILE" || fatal "Deployment submitting Failed"
+
+if [ -n "$DEPLOYMENT_NAME" ]; then
+    echo "---> Waiting for a successful deployment status..."
+    timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl rollout status deployment/"${DEPLOYMENT_NAME}" || fatal "Deployment Failed"
+fi
+

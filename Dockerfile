@@ -1,9 +1,9 @@
-FROM alpine
+FROM alpine:3.6
 
-RUN apk add --no-cache python py-pip && \
+RUN apk add --no-cache python && \
     apk add --update bash
 
-ENV GCLOUD_SDK_VERSION="141.0.0"
+ENV GCLOUD_SDK_VERSION="161.0.0"
 
 ENV \
   GCLOUD_SDK_URL="https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GCLOUD_SDK_VERSION}-linux-x86_64.tar.gz" \
