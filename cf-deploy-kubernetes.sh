@@ -45,7 +45,7 @@ echo "---> Submitting a deployment to Kubernetes by kubectl $KUBECTL_ACTION "
 kubectl $KUBECTL_ACTION -f "$DEPLOYMENT_FILE" || fatal "Deployment submitting Failed"
 
 if [ -n "$DEPLOYMENT_NAME" ]; then
-    echo "---> Waiting for a successful deployment status..."
+    echo "---> Waiting for a successful deployment/${DEPLOYMENT_NAME} status..."
     timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl rollout status deployment/"${DEPLOYMENT_NAME}" || fatal "Deployment Failed"
 fi
 
