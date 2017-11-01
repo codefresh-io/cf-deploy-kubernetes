@@ -9,7 +9,7 @@ readonly KUBECTL_ACTION=${KUBECTL_ACTION:-apply}
 [[ $KUBECTL_ACTION =~ ^(apply|create|replace)$ ]] || fatal "KUBECTL_ACTION should be one of apply|create|replace "
 
 deployment_file=${1:-deployment.yml}
-: ${KUBERNETES_NAMESPACE:-default}
+: ${KUBERNETES_NAMESPACE:=default}
 : ${KUBERNETES_DEPLOYMENT_TIMEOUT:=120}
 
 
