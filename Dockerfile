@@ -1,29 +1,24 @@
-FROM alpine:3.6
+FROM alpine:3.6 AS builder
 
-RUN apk add --no-cache python && \
-    apk add --update bash
+RUN apk update && apk add curl
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/\
+$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 
-ENV GCLOUD_SDK_VERSION="161.0.0"
 
-ENV \
-  GCLOUD_SDK_URL="https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GCLOUD_SDK_VERSION}-linux-x86_64.tar.gz" \
-  GCLOUD_SDK_FILENAME="google-cloud-sdk-${GCLOUD_SDK_VERSION}.tar.gz"
+FROM alpine
+
+RUN apk add --update bash
+
+COPY --from=builder ./kubectl /usr/local/bin/kubectl
+
+RUN chmod +x /usr/local/bin/kubectl
 
 WORKDIR /
-
-# Install kubectl and gcloud command line utilities
-ADD ${GCLOUD_SDK_URL} ${GCLOUD_SDK_FILENAME}
-
-RUN tar xf "${GCLOUD_SDK_FILENAME}" && \
-    sed -i -e 's/true/false/' /google-cloud-sdk/lib/googlecloudsdk/core/config.json; \
-    /google-cloud-sdk/bin/gcloud components install -q kubectl
 
 ADD cf-deploy-kubernetes.sh /cf-deploy-kubernetes
 ADD template.sh /template.sh
 
-# Set the default path to include all the commands
 RUN \
-    ln -s /google-cloud-sdk/bin/kubectl /usr/local/bin/kubectl && \
     chmod +x /cf-deploy-kubernetes && \
     chmod +x /template.sh
 
