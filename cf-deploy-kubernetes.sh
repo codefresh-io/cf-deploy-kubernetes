@@ -26,18 +26,25 @@ if [[ -n "$KUBERNETES_SERVER" && -n "$KUBERNETES_USER" && -n "$KUBERNETES_PASSWO
 else
     if [[ -z "${KUBECONTEXT}" ]]; then
         KUBECONTEXT=$(kubectl config current-context)
-        # If KUBECONFIG is set we obligate to set KUBECONTEXT to valid context name
-#        if [[ -n "${KUBECONFIG}" ]]; then
-#          echo -e "--- ERROR - KUBECONTEXT Environment variable is not set, please set it to one of integrated contexts: "
-#          kubectl config get-contexts
-#          fatal "KUBECONTEXT is not set "
-#        else
-#           KUBECONTEXT=$(kubectl config current-context)
-#        fi
+         If KUBECONFIG is set we obligate to set KUBECONTEXT to valid context name
+        if [[ -n "${KUBECONFIG}" ]]; then
+          echo -e "--- ERROR - KUBECONTEXT Environment variable is not set, please set it to one of integrated contexts: "
+          kubectl config get-contexts
+          fatal "KUBECONTEXT is not set "
+        else
+           KUBECONTEXT=$(kubectl config current-context)
+        fi
     fi
 fi
 
+#check the cluster version and decide which version of kubectl to use:
+SERVER_VERSION=$(kubectl version --short=true | grep -i server | cut -c18-20 | tr -d .)
+
+if (( "$SERVER_VERSION" <= "16" )); then mv /usr/local/bin/kubectl1.6 /usr/local/bin/kubectl; fi
+
+
 [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
+
 
 DEPLOYMENT_FILE=${deployment_file}-$(date '+%y-%m-%d_%H-%M-%S').yml
 $(dirname $0)/template.sh "$deployment_file" > "$DEPLOYMENT_FILE" || fatal "Failed to apply deployment template on $deployment_file"
