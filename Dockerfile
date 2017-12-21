@@ -1,11 +1,10 @@
 FROM alpine:3.6 AS builder
 
 RUN apk update && apk add curl
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/\
-$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.9.0/bin/linux/amd64/kubectl
 
 
-FROM alpine
+FROM alpine:3.6
 
 RUN apk add --update bash
 
