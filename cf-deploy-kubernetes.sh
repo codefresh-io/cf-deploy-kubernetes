@@ -47,7 +47,7 @@ if (( "$SERVER_VERSION" <= "16" )); then mv /usr/local/bin/kubectl1.6 /usr/local
 
 
 DEPLOYMENT_FILE=${deployment_file}-$(date '+%y-%m-%d_%H-%M-%S').yml
-$(dirname $0)/template.sh "$deployment_file" > "$DEPLOYMENT_FILE" || fatal "Failed to apply deployment template on $deployment_file"
+/template.sh "$deployment_file" > "$DEPLOYMENT_FILE" || fatal "Failed to apply deployment template on $deployment_file"
 
 
 echo "---> Kubernetes objects to deploy in  $deployment_file :"
