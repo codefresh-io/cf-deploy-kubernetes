@@ -14,18 +14,15 @@ http://kubernetes.io/docs/user-guide/deployments/
 2. The tested codebase has a yaml file (i.e. deployment.yml) that describes the Kubernetes deployment
 parameters and configuration of your application.
 3. The script processes deployment.yml as a simple template where all `{{ ENV_VARIABLE }}` are replaced with a value of $ENV_VARIABLE deployment.yml
-4. At the moment, only the basic username/pass authentication is supported.
 
 # Configuration
 
 The following env variables control the deployment configuration:
 
 1. KUBERNETES_DEPLOYMENT_TIMEOUT - How much to wait for a successful deployment before failing the build. Defaults to 120 (secs).
-2. KUBERNETES_USER - The user for the Kubernetes cluster. Mandatory.
-3. KUBERNETES_PASSWORD - The password for the Kubernetes cluster. Mandatory.
-4. KUBERNETES_SERVER - The server (HTTPS endpoint) of the Kubernetes cluster's API. Mandatory.
-5. KUBERNETES_NAMESPACE - The namespace to deploy
-6. KUBECTL_ACTION - means an action for `kubectl <action>`. Valid values are apply|create|replace. Default is "apply"
+2. KUBECONTEXT - corresponds to the name of a cluster added to codefresh
+3. KUBERNETES_NAMESPACE - The namespace to deploy
+4. KUBECTL_ACTION - means an action for `kubectl <action>`. Valid values are apply|create|replace. Default is "apply"
 
 # Usage in codefresh.io
 
@@ -48,7 +45,7 @@ spec:
     spec:
       containers:
         - name: apisvc
-          image: myrepo/apisvc:{{CF_BRANCH}}
+          image: myrepo/apisvc:{{CF_BRANCH}}_{{CF_REVISION}}
           ports:
             - containerPort: 80
               name: http
@@ -79,7 +76,6 @@ steps:
     commands:
       - /cf-deploy-kubernetes deployment.yml
     environment:
-      - KUBERNETES_USER=${{KUBERNETES_USER}}
-      - KUBERNETES_PASSWORD=${{KUBERNETES_PASSWORD}}
-      - KUBERNETES_SERVER=${{KUBERNETES_SERVER}}
+      - KUBECONTEXT=my-clusterg@my-staging
+      - KUBERNETES_NAMESPACE=mynamespace
 ```
