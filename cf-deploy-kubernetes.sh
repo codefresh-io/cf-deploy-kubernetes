@@ -8,7 +8,7 @@ fatal() {
 readonly KUBECTL_ACTION=${KUBECTL_ACTION:-apply}
 [[ $KUBECTL_ACTION =~ ^(apply|create|replace)$ ]] || fatal "KUBECTL_ACTION should be one of apply|create|replace "
 
-deployment_file=${1:-deployment.yml}
+deployment_file=${1:-C:/codefresh/volume/cf-generated/deployment.yml}
 : ${KUBERNETES_NAMESPACE:=default}
 : ${KUBERNETES_DEPLOYMENT_TIMEOUT:=120}
 
@@ -38,9 +38,9 @@ else
 fi
 
 #check the cluster version and decide which version of kubectl to use:
-SERVER_VERSION=$(kubectl version --short=true | grep -i server | cut -c18-20 | tr -d .)
+SERVER_VERSION=$(kubectl version --short=true --context "${KUBECONTEXT}" | grep -i server | cut -c18-20 | tr -d .)
 
-if (( "$SERVER_VERSION" <= "16" )); then mv /usr/local/bin/kubectl1.6 /usr/local/bin/kubectl; fi
+if (( "$SERVER_VERSION" <= "16" )); then mv /usr/local/bin/kubectl1.6 /usr/local/bin/kubectl; fi 2>/dev/null
 
 
 [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
@@ -66,5 +66,5 @@ kubectl --context "${KUBECONTEXT}" --namespace "${KUBERNETES_NAMESPACE}" $KUBECT
 
 if [ -n "$DEPLOYMENT_NAME" ]; then
     echo "---> Waiting for a successful deployment/${DEPLOYMENT_NAME} status to namespace ${KUBERNETES_NAMESPACE} ..."
-    timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl --context "${KUBECONTEXT}" --namespace "${KUBERNETES_NAMESPACE}" rollout status deployment/"${DEPLOYMENT_NAME}" || fatal "Deployment Failed"
+    timeout -s SIGTERM $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl --context "${KUBECONTEXT}" --namespace "${KUBERNETES_NAMESPACE}" rollout status deployment/"${DEPLOYMENT_NAME}" || fatal "Deployment Failed"
 fi
