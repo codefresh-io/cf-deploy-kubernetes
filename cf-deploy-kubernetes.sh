@@ -1,5 +1,27 @@
 #!/bin/bash
 
+parse_yaml() {
+   local prefix=$2
+   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+   sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
+        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
+   awk -F$fs '{
+      indent = length($1)/2;
+      vname[indent] = $2;
+      for (i in vname) {if (i > indent) {delete vname[i]}}
+      if (length($3) > 0) {
+         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+         printf("%s%s%s=%s\n", "'$prefix'",vn, $2, $3);
+      }
+   }'
+}
+
+
+objects() {
+parse_yaml $1 | awk -F"=" '/metadata_name=/ && i==1 {print  (NF>1)? $NF : " "; i=0} /kind=/{printf (NF>1)? $NF : "";printf " "; i=1}'
+}
+
+
 fatal() {
    echo "ERROR: $1"
    exit 1
@@ -52,11 +74,7 @@ $(dirname $0)/template.sh "$deployment_file" > "$DEPLOYMENT_FILE" || fatal "Fail
 
 echo "---> Kubernetes objects to deploy in  $deployment_file :"
 KUBECTL_OBJECTS=/tmp/deployment.objects
-kubectl convert -f "$DEPLOYMENT_FILE" --local=true --no-headers=true -o=custom-columns="KIND:{.kind},NAME:{.metadata.name}" > >(tee $KUBECTL_OBJECTS) 2>${KUBECTL_OBJECTS}.errors
-if [ $? != 0 ]; then
-   cat ${KUBECTL_OBJECTS}.errors
-   fatal "Failed to parse $deployment_file "
-fi
+objects $DEPLOYMENT_FILE | tee $KUBECTL_OBJECTS
 
 DEPLOYMENT_NAME=$(awk '/^Deployment /{a=$2}END{print a}' $KUBECTL_OBJECTS)
 
@@ -68,3 +86,4 @@ if [ -n "$DEPLOYMENT_NAME" ]; then
     echo "---> Waiting for a successful deployment/${DEPLOYMENT_NAME} status to namespace ${KUBERNETES_NAMESPACE} ..."
     timeout -s SIGTERM -t $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl --context "${KUBECONTEXT}" --namespace "${KUBERNETES_NAMESPACE}" rollout status deployment/"${DEPLOYMENT_NAME}" || fatal "Deployment Failed"
 fi
+
