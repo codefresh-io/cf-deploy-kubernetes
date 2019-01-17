@@ -45,7 +45,7 @@ spec:
     spec:
       containers:
         - name: apisvc
-          image: myrepo/apisvc:{{CF_BRANCH}}_{{CF_REVISION}}
+          image: myrepo/apisvc:{{CF_BRANCH}}-{{CF_REVISION}}
           ports:
             - containerPort: 80
               name: http
@@ -62,12 +62,12 @@ steps:
     type: build
     dockerfile: Dockerfile
     image_name: myrepo/apisvc
-    tag: '${{CF_BRANCH}}'
+    tag: '${{CF_BRANCH}}-{{CF_REVISION}}'
     
   push:
     type: push
     candidate: ${{build}}
-    tag: ${{CF_BRANCH}}
+    tag: '${{CF_BRANCH}}-{{CF_REVISION}}'
 
   deploy-to-kubernetes:
     image: codefresh/cf-deploy-kubernetes
