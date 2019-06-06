@@ -34,4 +34,6 @@ COPY template.sh ../template.sh
 RUN 'sed -i "s/\r$//" C:/cygwin64/cf-deploy-kubernetes'
 RUN 'sed -i "s/\r$//" C:/cygwin64/template.sh'
 
+LABEL owner=codefresh.io
+
 ENTRYPOINT ["C:/cygwin64/bin/sh", "-l", "-c"]
