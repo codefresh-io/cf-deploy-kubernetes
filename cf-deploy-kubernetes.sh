@@ -63,7 +63,8 @@ fi
 SERVER_VERSION=$(kubectl version --short=true --context "${KUBECONTEXT}" | grep -i server | cut -d ':' -f2 | cut -d '.' -f2 | sed 's/[^0-9]*//g')
 echo "Server minor version: $SERVER_VERSION"
 if (( "$SERVER_VERSION" <= "6" )); then mv /usr/local/bin/kubectl1.6 /usr/local/bin/kubectl; fi 2>/dev/null
-
+if (( "$SERVER_VERSION" == "14" )); then mv /usr/local/bin/kubectl1.14 /usr/local/bin/kubectl; fi 2>/dev/null
+if (( "$SERVER_VERSION" >= "15" )); then mv /usr/local/bin/kubectl1.15 /usr/local/bin/kubectl; fi 2>/dev/null
 
 [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
 
