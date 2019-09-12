@@ -67,15 +67,13 @@ if (( "$SERVER_VERSION" == "14" )); then cp -f /usr/local/bin/kubectl1.14 /usr/l
 if (( "$SERVER_VERSION" >= "15" )); then cp -f /usr/local/bin/kubectl1.15 /usr/local/bin/kubectl; fi 2>/dev/null
 [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
 
-kubectl version
-
 DEPLOYMENT_FILE=${deployment_file}-$(date '+%y-%m-%d_%H-%M-%S').yml
 $(dirname $0)/template.sh "$deployment_file" > "$DEPLOYMENT_FILE" || fatal "Failed to apply deployment template on $deployment_file"
 
 
 echo "---> Kubernetes objects to deploy in  $deployment_file :"
 KUBECTL_OBJECTS=/tmp/deployment.objects
-kubectl convert -f "$DEPLOYMENT_FILE" --local=true --no-headers=true -o=custom-columns="KIND:{.kind},NAME:{.metadata.name}" > >(tee $KUBECTL_OBJECTS) 2>${KUBECTL_OBJECTS}.errors
+kubectl convert -f "$DEPLOYMENT_FILE" --local=true  -o=custom-columns="KIND:{.kind},NAME:{.metadata.name}" > >(tee $KUBECTL_OBJECTS) 2>${KUBECTL_OBJECTS}.errors
 if [ $? != 0 ]; then
    cat ${KUBECTL_OBJECTS}.errors
    echo "Failed to parse $deployment_file with kubectl... "
