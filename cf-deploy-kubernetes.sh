@@ -61,7 +61,7 @@ fi
 
 # Add SERVER_VERSION override and testing capabilities
 
-if [[ -z "${SERVER_VERSION}" ]]; then
+if [[ -n "${SERVER_VERSION}" ]]; then
     # Dynamically define SERVER_VERSION using kube context
     echo "Statically defined version: ${SERVER_VERSION}"
 else
@@ -71,36 +71,43 @@ else
 fi
 
 # Determine appropriate kubectl version
-if (( "$SERVER_VERSION" >= "15" )); then
+if [[ "${SERVER_VERSION}" -eq "15" ]]; then
     KUBE_CTL="15"
-elif (( "${SERVER_VERSION}" >= "13" && "${SERVER_VERSION}" <= "14")); )); then
+elif [[ "${SERVER_VERSION}" -le "13" && "${SERVER_VERSION}" -ge "14" ]]; then
     KUBE_CTL="14"
-elif (( "${SERVER_VERSION}" >= "12" && "${SERVER_VERSION}" <= "11")); )); then
+elif [[ "${SERVER_VERSION}" -le "12" && "${SERVER_VERSION}" -ge "11" ]]; then
     KUBE_CTL="12"
-elif (( "${SERVER_VERSION}" >= "10" && "${SERVER_VERSION}" <= "9")); )); then
+elif [[ "${SERVER_VERSION}" -le "10" && "${SERVER_VERSION}" -ge "9" ]]; then
     KUBE_CTL="10"
-elif (( "${SERVER_VERSION}" <= "6" )); then
+elif [[ "${SERVER_VERSION}" -ge "6" ]]; then
     KUBE_CTL="6"
+else
+    echo "kubectl version: v1.${SERVER_VERSION}"
+    fatal "Version Not Supported!!!"
+    exit 1
 fi
 
 # Assign kubectl version unless default
-if (( "$KUBE_CTL" != "14" )); then
-    cp -f /usr/local/bin/kubectl1.${KUBE_CTL} /usr/local/bin/kubectl
+if [[ "${KUBE_CTL}" != "14" ]]; then
+    echo "Setting kubectl to version 1.${KUBE_CTL}"
+    cp -f "/usr/local/bin/kubectl1.${KUBE_CTL}" /usr/local/bin/kubectl
 fi
 
 # Simple testing logic for making sure versions are set
-if [[ -z "${KUBE_CTL_TEST_VERSION}" ]]; then
+if [[ -n "${KUBE_CTL_TEST_VERSION}" ]]; then
     KUBE_CTL_VERSION=`kubectl version --client --short`
+    echo "Testing kubectl version is set..."
     if [[ "${KUBE_CTL_VERSION}" == *"${KUBE_CTL_TEST_VERSION}"* ]]; then
         echo "Version correctly set"
         echo "Kubectl Version: ${KUBE_CTL}"
         echo "Test Version: ${KUBE_CTL_TEST_VERSION}"
         exit 0
     else
-        echo "Version Mismatch"
         echo "Kubectl Version: ${KUBE_CTL}"
         echo "Test Version: ${KUBE_CTL_TEST_VERSION}"
+        fatal "Version Mismatch!!!"
         exit 1
+    fi
 fi    
 
 [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
