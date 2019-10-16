@@ -99,11 +99,11 @@ if [[ -n "${KUBE_CTL_TEST_VERSION}" ]]; then
     echo "Testing kubectl version is set..."
     if [[ "${KUBE_CTL_VERSION}" == *"${KUBE_CTL_TEST_VERSION}"* ]]; then
         echo "Version correctly set"
-        echo "Kubectl Version: ${KUBE_CTL}"
+        echo "Kubectl Version: ${KUBE_CTL_VERSION}"
         echo "Test Version: ${KUBE_CTL_TEST_VERSION}"
         exit 0
     else
-        echo "Kubectl Version: ${KUBE_CTL}"
+        echo "Kubectl Version: ${KUBE_CTL_VERSION}"
         echo "Test Version: ${KUBE_CTL_TEST_VERSION}"
         fatal "Version Mismatch!!!"
         exit 1
