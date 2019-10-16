@@ -83,9 +83,15 @@ elif (( "${SERVER_VERSION}" <= "6" )); then
     KUBE_CTL="6"
 fi
 
+# Assign kubectl version unless default
+if (( "$KUBE_CTL" != "14" )); then
+    cp -f /usr/local/bin/kubectl1.${KUBE_CTL} /usr/local/bin/kubectl
+fi
+
 # Simple testing logic for making sure versions are set
 if [[ -z "${KUBE_CTL_TEST_VERSION}" ]]; then
-    if [ "${KUBE_CTL}" == "${KUBE_CTL_TEST_VERSION}" ]; then
+    KUBE_CTL_VERSION=`kubectl version --client --short`
+    if [[ "${KUBE_CTL_VERSION}" == *"${KUBE_CTL_TEST_VERSION}"* ]]; then
         echo "Version correctly set"
         echo "Kubectl Version: ${KUBE_CTL}"
         echo "Test Version: ${KUBE_CTL_TEST_VERSION}"
@@ -96,11 +102,6 @@ if [[ -z "${KUBE_CTL_TEST_VERSION}" ]]; then
         echo "Test Version: ${KUBE_CTL_TEST_VERSION}"
         exit 1
 fi    
-
-# Assign kubectl version unless default
-if (( "$KUBE_CTL" != "14" )); then
-    cp -f /usr/local/bin/kubectl1.${KUBE_CTL} /usr/local/bin/kubectl
-fi
 
 [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
 
