@@ -87,11 +87,9 @@ else
     exit 1
 fi
 
-# Assign kubectl version unless default
-if [[ "${KUBE_CTL}" != "14" ]]; then
-    echo "Setting kubectl to version 1.${KUBE_CTL}"
-    cp -f "/usr/local/bin/kubectl1.${KUBE_CTL}" /usr/local/bin/kubectl
-fi
+# Assign kubectl version 
+echo "Setting kubectl to version 1.${KUBE_CTL}"
+cp -f "/usr/local/bin/kubectl1.${KUBE_CTL}" /usr/local/bin/kubectl
 
 # Simple testing logic for making sure versions are set
 if [[ -n "${KUBE_CTL_TEST_VERSION}" ]]; then
