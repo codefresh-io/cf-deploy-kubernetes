@@ -59,54 +59,12 @@ else
     fi
 fi
 
-# Add SERVER_VERSION override and testing capabilities
-
-if [[ -n "${SERVER_VERSION}" ]]; then
-    # Dynamically define SERVER_VERSION using kube context
-    echo "Statically defined version: ${SERVER_VERSION}"
-    KUBE_CTL=${SERVER_VERSION}
-else
-    # Dynamically define SERVER_VERSION using kube context
-    SERVER_VERSION=$(kubectl version --short=true --context "${KUBECONTEXT}" | grep -i server | cut -d ':' -f2 | cut -d '.' -f2 | sed 's/[^0-9]*//g')
-    echo "Dynamically defined version: ${SERVER_VERSION}"
-fi
-
-# Determine appropriate kubectl version if not statically set
-if [[ -z "${KUBE_CTL}" ]]; then
-    if [[ "${SERVER_VERSION}" -eq "15" ]]; then
-        KUBE_CTL="15"
-    elif [[ "${SERVER_VERSION}" -eq "14" ]]; then
-        KUBE_CTL="14"
-    elif [[ "${SERVER_VERSION}" -le "13" && "${SERVER_VERSION}" -ge "6" ]]; then
-        KUBE_CTL="6"
-    else
-        echo "kubectl version: v1.${SERVER_VERSION}"
-        fatal "Version Not Supported!!!"
-        exit 1
-    fi
-fi
-
-# Assign kubectl version 
-echo "Setting kubectl to version 1.${KUBE_CTL}"
-cp -f "/usr/local/bin/kubectl1.${KUBE_CTL}" /usr/local/bin/kubectl
-
-# Simple testing logic for making sure versions are set
-if [[ -n "${KUBE_CTL_TEST_VERSION}" ]]; then
-    KUBE_CTL_VERSION=`kubectl version --client --short`
-    echo "Testing kubectl version is set..."
-    if [[ "${KUBE_CTL_VERSION}" == *"${KUBE_CTL_TEST_VERSION}"* ]]; then
-        echo "Version correctly set"
-        echo "Kubectl Version: ${KUBE_CTL_VERSION}"
-        echo "Test Version: ${KUBE_CTL_TEST_VERSION}"
-        exit 0
-    else
-        echo "Kubectl Version: ${KUBE_CTL_VERSION}"
-        echo "Test Version: ${KUBE_CTL_TEST_VERSION}"
-        fatal "Version Mismatch!!!"
-        exit 1
-    fi
-fi    
-
+#check the cluster version and decide which version of kubectl to use:
+SERVER_VERSION=$(kubectl version --short=true --context "${KUBECONTEXT}" | grep -i server | cut -d ':' -f2 | cut -d '.' -f2 | sed 's/[^0-9]*//g')
+echo "Server minor version: $SERVER_VERSION"
+if (( "$SERVER_VERSION" <= "6" )); then cp -f /usr/local/bin/kubectl1.6 /usr/local/bin/kubectl; fi 2>/dev/null
+if (( "$SERVER_VERSION" == "14" )); then cp -f /usr/local/bin/kubectl1.14 /usr/local/bin/kubectl; fi 2>/dev/null
+if (( "$SERVER_VERSION" >= "15" )); then cp -f /usr/local/bin/kubectl1.15 /usr/local/bin/kubectl; fi 2>/dev/null
 [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
 
 DEPLOYMENT_FILE=${deployment_file}-$(date '+%y-%m-%d_%H-%M-%S').yml

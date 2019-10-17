@@ -24,10 +24,6 @@ The following env variables control the deployment configuration:
 3. KUBERNETES_NAMESPACE - The namespace to deploy
 4. KUBECTL_ACTION - means an action for `kubectl <action>`. Valid values are apply|create|replace. Default is "apply"
 
-Optional:
-`SERVER_VERSION` - Manually set the Minor Kubernetes version.  Supports 9-15.
-If left blank version 13 and older will use kubectl v1.6.0
-
 # Usage in codefresh.io
 
 ### deployment.yml
