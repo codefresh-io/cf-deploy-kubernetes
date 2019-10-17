@@ -73,8 +73,10 @@ fi
 # Determine appropriate kubectl version
 if [[ "${SERVER_VERSION}" -eq "15" ]]; then
     KUBE_CTL="15"
-elif [[ "${SERVER_VERSION}" -le "14" && "${SERVER_VERSION}" -ge "13" ]]; then
+elif [[ "${SERVER_VERSION}" -eq "14" ]]; then
     KUBE_CTL="14"
+elif [[ "${SERVER_VERSION}" -eq "13" ]]; then
+    KUBE_CTL="13"
 elif [[ "${SERVER_VERSION}" -le "12" && "${SERVER_VERSION}" -ge "11" ]]; then
     KUBE_CTL="12"
 elif [[ "${SERVER_VERSION}" -le "10" && "${SERVER_VERSION}" -ge "9" ]]; then
