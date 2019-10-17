@@ -64,29 +64,26 @@ fi
 if [[ -n "${SERVER_VERSION}" ]]; then
     # Dynamically define SERVER_VERSION using kube context
     echo "Statically defined version: ${SERVER_VERSION}"
+    KUBE_CTL=${SERVER_VERSION}
 else
     # Dynamically define SERVER_VERSION using kube context
     SERVER_VERSION=$(kubectl version --short=true --context "${KUBECONTEXT}" | grep -i server | cut -d ':' -f2 | cut -d '.' -f2 | sed 's/[^0-9]*//g')
     echo "Dynamically defined version: ${SERVER_VERSION}"
 fi
 
-# Determine appropriate kubectl version
-if [[ "${SERVER_VERSION}" -eq "15" ]]; then
-    KUBE_CTL="15"
-elif [[ "${SERVER_VERSION}" -eq "14" ]]; then
-    KUBE_CTL="14"
-elif [[ "${SERVER_VERSION}" -eq "13" ]]; then
-    KUBE_CTL="13"
-elif [[ "${SERVER_VERSION}" -le "12" && "${SERVER_VERSION}" -ge "11" ]]; then
-    KUBE_CTL="12"
-elif [[ "${SERVER_VERSION}" -le "10" && "${SERVER_VERSION}" -ge "9" ]]; then
-    KUBE_CTL="10"
-elif [[ "${SERVER_VERSION}" -ge "6" ]]; then
-    KUBE_CTL="6"
-else
-    echo "kubectl version: v1.${SERVER_VERSION}"
-    fatal "Version Not Supported!!!"
-    exit 1
+# Determine appropriate kubectl version if not statically set
+if [[ -z "${KUBE_CTL}" ]]; then
+    if [[ "${SERVER_VERSION}" -eq "15" ]]; then
+        KUBE_CTL="15"
+    elif [[ "${SERVER_VERSION}" -eq "14" ]]; then
+        KUBE_CTL="14"
+    elif [[ "${SERVER_VERSION}" -le "13" && "${SERVER_VERSION}" -ge "6" ]]; then
+        KUBE_CTL="6"
+    else
+        echo "kubectl version: v1.${SERVER_VERSION}"
+        fatal "Version Not Supported!!!"
+        exit 1
+    fi
 fi
 
 # Assign kubectl version 

@@ -25,7 +25,8 @@ The following env variables control the deployment configuration:
 4. KUBECTL_ACTION - means an action for `kubectl <action>`. Valid values are apply|create|replace. Default is "apply"
 
 Optional:
-`SERVER_VERSION` - Used mainly for testing. Manually set the Minor Kubernetes version.
+`SERVER_VERSION` - Manually set the Minor Kubernetes version.  Supports 9-15.
+If left blank version 13 and older will use kubectl v1.6.0
 
 # Usage in codefresh.io
 
