@@ -15,6 +15,7 @@ RUN apk add --update bash
 #copy all versions of kubectl to switch between them later.
 COPY --from=builder kubectl1.15 /usr/local/bin/
 COPY --from=builder kubectl1.14 /usr/local/bin/
+COPY --from=builder kubectl1.13 /usr/local/bin/
 COPY --from=builder kubectl1.12 /usr/local/bin/
 COPY --from=builder kubectl1.10 /usr/local/bin/
 COPY --from=builder kubectl1.6 /usr/local/bin/
@@ -22,7 +23,7 @@ COPY --from=builder kubectl1.6 /usr/local/bin/
 # Set Default
 COPY --from=builder kubectl1.14 /usr/local/bin/kubectl
 
-RUN chmod +x /usr/local/bin/kubectl /usr/local/bin/kubectl1.6 /usr/local/bin/kubectl1.10 /usr/local/bin/kubectl1.12 /usr/local/bin/kubectl1.14 /usr/local/bin/kubectl1.15
+RUN chmod +x /usr/local/bin/kubectl /usr/local/bin/kubectl1.6 /usr/local/bin/kubectl1.10 /usr/local/bin/kubectl1.12 /usr/local/bin/kubectl1.13 /usr/local/bin/kubectl1.14 /usr/local/bin/kubectl1.15
 
 WORKDIR /
 
