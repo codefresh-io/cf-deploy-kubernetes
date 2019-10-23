@@ -48,7 +48,7 @@ if [[ -n "$KUBERNETES_SERVER" && -n "$KUBERNETES_USER" && -n "$KUBERNETES_PASSWO
 else
     if [[ -z "${KUBECONTEXT}" ]]; then
         KUBECONTEXT=$(kubectl config current-context)
-         If KUBECONFIG is set we obligate to set KUBECONTEXT to valid context name
+        # If KUBECONFIG is set we obligate to set KUBECONTEXT to valid context name
         if [[ -n "${KUBECONFIG}" ]]; then
           echo -e "--- ERROR - KUBECONTEXT Environment variable is not set, please set it to one of integrated contexts: "
           kubectl config get-contexts
