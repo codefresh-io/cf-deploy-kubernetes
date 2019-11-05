@@ -48,7 +48,7 @@ if [[ -n "$KUBERNETES_SERVER" && -n "$KUBERNETES_USER" && -n "$KUBERNETES_PASSWO
 else
     if [[ -z "${KUBECONTEXT}" ]]; then
         KUBECONTEXT=$(kubectl config current-context)
-         If KUBECONFIG is set we obligate to set KUBECONTEXT to valid context name
+        # If KUBECONFIG is set we obligate to set KUBECONTEXT to valid context name
         if [[ -n "${KUBECONFIG}" ]]; then
           echo -e "--- ERROR - KUBECONTEXT Environment variable is not set, please set it to one of integrated contexts: "
           kubectl config get-contexts
@@ -59,13 +59,40 @@ else
     fi
 fi
 
-#check the cluster version and decide which version of kubectl to use:
-SERVER_VERSION=$(kubectl version --short=true --context "${KUBECONTEXT}" | grep -i server | cut -d ':' -f2 | cut -d '.' -f2 | sed 's/[^0-9]*//g')
-echo "Server minor version: $SERVER_VERSION"
-if (( "$SERVER_VERSION" <= "6" )); then cp -f /usr/local/bin/kubectl1.6 /usr/local/bin/kubectl; fi 2>/dev/null
-if (( "$SERVER_VERSION" == "14" )); then cp -f /usr/local/bin/kubectl1.14 /usr/local/bin/kubectl; fi 2>/dev/null
-if (( "$SERVER_VERSION" >= "15" )); then cp -f /usr/local/bin/kubectl1.15 /usr/local/bin/kubectl; fi 2>/dev/null
-[ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
+# Add SERVER_VERSION override and testing capabilities
+
+if [[ -n "${SERVER_VERSION}" ]]; then
+    # Statically define SERVER_VERSION from variable override
+    echo "Statically defined version: ${SERVER_VERSION}"
+    # Assign kubectl version 
+    echo "Setting kubectl to version 1.${SERVER_VERSION}"
+    cp -f "/usr/local/bin/kubectl1.${SERVER_VERSION}" /usr/local/bin/kubectl 2>/dev/null
+else
+    #check the cluster version and decide which version of kubectl to use:
+    SERVER_VERSION=$(kubectl version --short=true --context "${KUBECONTEXT}" | grep -i server | cut -d ':' -f2 | cut -d '.' -f2 | sed 's/[^0-9]*//g')
+    echo "Server minor version: $SERVER_VERSION"
+    if (( "$SERVER_VERSION" <= "6" )); then cp -f /usr/local/bin/kubectl1.6 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" == "14" )); then cp -f /usr/local/bin/kubectl1.14 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" >= "15" )); then cp -f /usr/local/bin/kubectl1.15 /usr/local/bin/kubectl; fi 2>/dev/null
+    [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
+fi
+
+# Simple testing logic for making sure override versions are set
+if [[ -n "${KUBE_CTL_TEST_VERSION}" ]]; then
+    KUBE_CTL_VERSION=`kubectl version --client --short`
+    echo "Testing kubectl version is set..."
+    if [[ "${KUBE_CTL_VERSION}" == *"${KUBE_CTL_TEST_VERSION}"* ]]; then
+        echo "Version correctly set"
+        echo "Kubectl Version: ${KUBE_CTL_VERSION}"
+        echo "Test Version: ${KUBE_CTL_TEST_VERSION}"
+        exit 0
+    else
+        echo "Kubectl Version: ${KUBE_CTL_VERSION}"
+        echo "Test Version: ${KUBE_CTL_TEST_VERSION}"
+        fatal "Version Mismatch!!!"
+        exit 1
+    fi
+fi    
 
 DEPLOYMENT_FILE=${deployment_file}-$(date '+%y-%m-%d_%H-%M-%S').yml
 $(dirname $0)/template.sh "$deployment_file" > "$DEPLOYMENT_FILE" || fatal "Failed to apply deployment template on $deployment_file"
