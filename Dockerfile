@@ -12,7 +12,7 @@ RUN curl -o kubectl1.10 -L https://storage.googleapis.com/kubernetes-release/rel
 RUN curl -o kubectl1.6 -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/amd64/kubectl
 
 
-FROM alpine:3.6
+FROM alpine:3.10
 
 RUN apk add --update bash
 
