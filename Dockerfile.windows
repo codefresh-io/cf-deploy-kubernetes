@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/windows/servercore:1809
+FROM mcr.microsoft.com/windows/servercore:1909
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop';"]
 
@@ -8,7 +8,7 @@ RUN $url = 'https://cygwin.com/setup-x86_64.exe'; \
         \
         Write-Host 'Installing ...'; \
         New-Item -ItemType directory -Path 'C:/tmp'; \
-        Start-Process "C:/setup-x86_64.exe" -NoNewWindow -Wait -PassThru -ArgumentList @('-q','-v','-n','-B','-R','C:/cygwin64','-l','C:/tmp','-s','http://mirror.pkill.info/cygwin/','-P','default,curl,openssl'); \
+        Start-Process "C:/setup-x86_64.exe" -NoNewWindow -Wait -PassThru -ArgumentList @('-q','-v','-n','-B','-R','C:/cygwin64','-l','C:/tmp','-s','https://mirrors.sonic.net/cygwin/','-P', 'default,curl,openssl'); \
         \
         Write-Host 'Removing ...'; \
         Remove-Item -Path 'C:/tmp' -Force -Recurse -ErrorAction Ignore; \
@@ -24,9 +24,9 @@ RUN $ACL=Get-Acl -Path 'C:\'; \
 SHELL ["C:/cygwin64/bin/sh", "-l", "-c"]
 WORKDIR C:/cygwin64/bin
 
-RUN ["curl -o kubectl.exe -L https://storage.googleapis.com/kubernetes-release/release/v1.9.0/bin/windows/amd64/kubectl.exe"]
-RUN ["curl -o kubectl1.6.exe -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/windows/amd64/kubectl.exe"]    
-RUN ["chmod +x /usr/bin/kubectl.exe /usr/bin/kubectl1.6.exe"]
+RUN 'curl -o /usr/bin/kubectl.exe -L https://storage.googleapis.com/kubernetes-release/release/v1.9.0/bin/windows/amd64/kubectl.exe'
+RUN 'curl -o /usr/bin/kubectl1.6.exe -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/windows/amd64/kubectl.exe'
+RUN 'chmod +x /usr/bin/kubectl.exe /usr/bin/kubectl1.6.exe'
 
 COPY cf-deploy-kubernetes.sh ../cf-deploy-kubernetes
 COPY template.sh ../template.sh
