@@ -1,27 +1,5 @@
 #!/bin/bash
 
-parse_yaml() {
-   local prefix=$2
-   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
-   sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
-        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
-   awk -F$fs '{
-      indent = length($1)/2;
-      vname[indent] = $2;
-      for (i in vname) {if (i > indent) {delete vname[i]}}
-      if (length($3) > 0) {
-         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
-         printf("%s%s%s=%s\n", "'$prefix'",vn, $2, $3);
-      }
-   }'
-}
-
-
-objects() {
-parse_yaml $1 | awk -F"=" '/metadata_name=/ && i==1 {print  (NF>1)? $NF : " "; i=0} /kind=/{printf (NF>1)? $NF : "";printf " "; i=1}'
-}
-
-
 fatal() {
    echo "ERROR: $1"
    exit 1
@@ -98,20 +76,23 @@ DEPLOYMENT_FILE=${deployment_file}-$(date '+%y-%m-%d_%H-%M-%S').yml
 $(dirname $0)/template.sh "$deployment_file" > "$DEPLOYMENT_FILE" || fatal "Failed to apply deployment template on $deployment_file"
 
 
-echo "---> Kubernetes objects to deploy in  $deployment_file :"
+echo -e "\n\n---> Kubernetes objects to deploy in  $deployment_file :"
 KUBECTL_OBJECTS=/tmp/deployment.objects
-kubectl convert -f "$DEPLOYMENT_FILE" --local=true --no-headers=true -o=custom-columns="KIND:{.kind},NAME:{.metadata.name}" > >(tee $KUBECTL_OBJECTS) 2>${KUBECTL_OBJECTS}.errors
+kubectl apply \
+    --dry-run \
+    -f "$DEPLOYMENT_FILE" \
+    -o go-template \
+    --template '{{ if .items }}{{ range .items }}{{ printf "%-30s%-50s\n" .kind .metadata.name}}{{end}}{{else}}{{ printf "%-30s%-50s\n" .kind .metadata.name}}{{end}}' \
+    > >(tee $KUBECTL_OBJECTS) 2>${KUBECTL_OBJECTS}.errors
+
 if [ $? != 0 ]; then
-   cat ${KUBECTL_OBJECTS}.errors
-   echo "Failed to parse $deployment_file with kubectl... "
-   echo "Using alternative parsing method... "
-   truncate -s 0 $KUBECTL_OBJECTS
-   objects $DEPLOYMENT_FILE | tee $KUBECTL_OBJECTS
+    echo -e "\nERROR Failed to parse ${deployment_file}"
+    cat ${KUBECTL_OBJECTS}.errors
 fi
 
 DEPLOYMENT_NAME=$(awk '/^Deployment /{a=$2}END{print a}' $KUBECTL_OBJECTS)
 
-echo "---> Submitting a deployment to Kubernetes by
+echo -e "\n\n---> Submitting a deployment to Kubernetes by
    kubectl --context "${KUBECONTEXT}" --namespace "${KUBERNETES_NAMESPACE}" $KUBECTL_ACTION "
 kubectl --context "${KUBECONTEXT}" --namespace "${KUBERNETES_NAMESPACE}" $KUBECTL_ACTION -f "$DEPLOYMENT_FILE" || fatal "Deployment submitting Failed"
 
@@ -119,4 +100,3 @@ if [ -n "$DEPLOYMENT_NAME" ]; then
     echo "---> Waiting for a successful deployment/${DEPLOYMENT_NAME} status to namespace ${KUBERNETES_NAMESPACE} ..."
     timeout -s SIGTERM $KUBERNETES_DEPLOYMENT_TIMEOUT kubectl --context "${KUBECONTEXT}" --namespace "${KUBERNETES_NAMESPACE}" rollout status deployment/"${DEPLOYMENT_NAME}" || fatal "Deployment Failed"
 fi
-

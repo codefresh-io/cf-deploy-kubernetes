@@ -28,6 +28,8 @@ COPY --from=builder kubectl1.6 /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/kubectl /usr/local/bin/kubectl1.6 /usr/local/bin/kubectl1.11 /usr/local/bin/kubectl1.12 /usr/local/bin/kubectl1.13 /usr/local/bin/kubectl1.14 /usr/local/bin/kubectl1.15 /usr/local/bin/kubectl1.16
 
+RUN ls -la /usr/local/bin/kubectl*
+
 WORKDIR /
 
 ADD cf-deploy-kubernetes.sh /cf-deploy-kubernetes
