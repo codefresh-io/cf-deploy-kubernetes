@@ -78,7 +78,7 @@ $(dirname $0)/template.sh "$deployment_file" > "$DEPLOYMENT_FILE" || fatal "Fail
 
 echo -e "\n\n---> Kubernetes objects to deploy in  $deployment_file :"
 KUBECTL_OBJECTS=/tmp/deployment.objects
-kubectl apply \
+kubectl $KUBECTL_ACTION \
     --context "${KUBECONTEXT}" \
     --namespace "${KUBERNETES_NAMESPACE}" \
     --dry-run \
