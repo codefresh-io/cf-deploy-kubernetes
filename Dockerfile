@@ -2,7 +2,7 @@ FROM alpine:3.6 AS builder
 
 RUN apk update && apk add curl
 
-RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "${ARCH}") && \ 
+RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd64") && \ 
     curl -o kubectl1.16 -L https://storage.googleapis.com/kubernetes-release/release/v1.16.0/bin/linux/${ARCH}/kubectl && \ 
     curl -o kubectl1.15 -L https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/${ARCH}/kubectl && \ 
     curl -o kubectl1.14 -L https://storage.googleapis.com/kubernetes-release/release/v1.14.0/bin/linux/${ARCH}/kubectl && \ 
