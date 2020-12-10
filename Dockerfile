@@ -12,6 +12,7 @@ RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "${AR
     curl -o kubectl1.10 -L https://storage.googleapis.com/kubernetes-release/release/v1.10.0/bin/linux/${ARCH}/kubectl && \ 
     curl -o kubectl1.6 -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/${ARCH}/kubectl
 
+
 FROM alpine:3.10
 
 RUN apk add --update bash
