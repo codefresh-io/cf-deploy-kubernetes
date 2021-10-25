@@ -26,7 +26,7 @@ The following env variables control the deployment configuration:
 
 Optional:
 
-`SERVER_VERSION` - Manually set the Minor kubectl version.  Supports 10-16.
+`SERVER_VERSION` - Manually set the Minor kubectl version.  Supports 10-22.
 
 # Usage in codefresh.io
 
