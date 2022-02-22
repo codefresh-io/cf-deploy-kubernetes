@@ -26,9 +26,8 @@ RUN $ACL=Get-Acl -Path 'C:\'; \
 SHELL ["C:/cygwin64/bin/sh", "-l", "-c"]
 WORKDIR C:/cygwin64/bin
 
-RUN 'curl -o /usr/bin/kubectl.exe -L https://storage.googleapis.com/kubernetes-release/release/v1.9.0/bin/windows/amd64/kubectl.exe'
-RUN 'curl -o /usr/bin/kubectl1.6.exe -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/windows/amd64/kubectl.exe'
-RUN 'chmod +x /usr/bin/kubectl.exe /usr/bin/kubectl1.6.exe'
+RUN 'curl -o /usr/bin/kubectl.exe -L https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/windows/amd64/kubectl.exe'
+RUN 'chmod +x /usr/bin/kubectl.exe'
 
 COPY cf-deploy-kubernetes.sh ../cf-deploy-kubernetes
 COPY template.sh ../template.sh
