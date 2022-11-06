@@ -1,10 +1,9 @@
 FROM debian:bullseye-slim
 
-RUN apt-get update && apt upgrade -y
-RUN apt-get install curl bash -y
-RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd64")
 
-RUN curl -o /usr/local/bin/kubectl1.22 -L https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/${ARCH}/kubectl && \
+RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd64")
+RUN apt-get update && apt upgrade -y && apt-get install curl bash -y && \
+curl -o /usr/local/bin/kubectl1.22 -L https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/${ARCH}/kubectl && \
 curl -o /usr/local/bin/kubectl1.21 -L https://storage.googleapis.com/kubernetes-release/release/v1.21.0/bin/linux/${ARCH}/kubectl && \
 curl -o /usr/local/bin/kubectl1.20 -L https://storage.googleapis.com/kubernetes-release/release/v1.20.0/bin/linux/${ARCH}/kubectl && \
 curl -o /usr/local/bin/kubectl1.19 -L https://storage.googleapis.com/kubernetes-release/release/v1.19.0/bin/linux/${ARCH}/kubectl && \
@@ -17,7 +16,9 @@ curl -o /usr/local/bin/kubectl1.13 -L https://storage.googleapis.com/kubernetes-
 curl -o /usr/local/bin/kubectl1.12 -L https://storage.googleapis.com/kubernetes-release/release/v1.12.0/bin/linux/${ARCH}/kubectl && \
 curl -o /usr/local/bin/kubectl1.11 -L https://storage.googleapis.com/kubernetes-release/release/v1.11.0/bin/linux/${ARCH}/kubectl && \
 curl -o /usr/local/bin/kubectl -L https://storage.googleapis.com/kubernetes-release/release/v1.10.0/bin/linux/${ARCH}/kubectl && \
-curl -o /usr/local/bin/kubectl1.6 -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/${ARCH}/kubectl
+curl -o /usr/local/bin/kubectl1.6 -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/${ARCH}/kubectl && \
+apt-get purge curl -y && apt-get clean
+
 
 RUN chmod +x /usr/local/bin/kubectl \
     /usr/local/bin/kubectl1.6 \
