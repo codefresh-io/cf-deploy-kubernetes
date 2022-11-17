@@ -19,9 +19,9 @@ RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd6
     curl -o kubectl1.6 -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/${ARCH}/kubectl
 
 
-FROM alpine:3.15.6
+FROM debian:bullseye-slim
 
-RUN apk --no-cache update && apk upgrade && apk add --update bash
+RUN apt update && apt upgrade && apt install bash
 
 #copy all versions of kubectl to switch between them later.
 COPY --from=builder kubectl1.22 /usr/local/bin/
@@ -59,7 +59,7 @@ WORKDIR /
 ADD cf-deploy-kubernetes.sh /cf-deploy-kubernetes
 ADD template.sh /template.sh
 
-RUN adduser -D -h /home/cfu -s /bin/bash cfu \
+RUN adduser --disabled-password --home /home/cfu --shell /bin/bash cfu \
     && chgrp -R $(id -g cfu) /cf-deploy-kubernetes /usr/local/bin /template.sh \
     && chmod -R g+rwX /cf-deploy-kubernetes /usr/local/bin /template.sh
 USER cfu
