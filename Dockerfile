@@ -22,6 +22,8 @@ RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd6
 
 FROM debian:bullseye-slim
 
+RUN apt-get update -y && apt-get install busybox -y && ln -s /bin/busybox /usr/bin/[[
+
 RUN adduser --gecos "" --disabled-password --home /home/cfu --shell /bin/bash cfu
 
 #RUN apt update && apt upgrade && apt install bash # THIS IS NOT REQUIRED. BASH IS ALREADY INCLUDED IN BULLSEYE
