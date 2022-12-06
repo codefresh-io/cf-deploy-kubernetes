@@ -91,7 +91,7 @@ KUBECTL_OBJECTS=/tmp/deployment.objects
 kubectl $KUBECTL_ACTION \
     --context "${KUBECONTEXT}" \
     --namespace "${KUBERNETES_NAMESPACE}" \
-    --dry-run \
+    --dry-run=client \
     -f "$DEPLOYMENT_FILE" \
     -o go-template \
     --template '{{ if .items }}{{ range .items }}{{ printf "%-30s%-50s\n" .kind .metadata.name}}{{end}}{{else}}{{ printf "%-30s%-50s\n" .kind .metadata.name}}{{end}}' \
