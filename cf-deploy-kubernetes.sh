@@ -83,13 +83,18 @@ fi
 DEPLOYMENT_FILE=${deployment_file}-$(date '+%y-%m-%d_%H-%M-%S').yml
 $(dirname $0)/template.sh "$deployment_file" > "$DEPLOYMENT_FILE" || fatal "Failed to apply deployment template on $deployment_file"
 
+if (( "$SERVER_VERSION" <= "17" )); then
+  dry_run_value=true
+else
+  dry_run_value=client
+fi
 
 echo -e "\n\n---> Kubernetes objects to deploy in  $deployment_file :"
 KUBECTL_OBJECTS=/tmp/deployment.objects
 kubectl $KUBECTL_ACTION \
     --context "${KUBECONTEXT}" \
     --namespace "${KUBERNETES_NAMESPACE}" \
-    --dry-run=client \
+    --dry-run=${dry_run_value} \
     -f "$DEPLOYMENT_FILE" \
     -o go-template \
     --template '{{ if .items }}{{ range .items }}{{ printf "%-30s%-50s\n" .kind .metadata.name}}{{end}}{{else}}{{ printf "%-30s%-50s\n" .kind .metadata.name}}{{end}}' \
