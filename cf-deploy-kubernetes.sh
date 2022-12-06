@@ -42,7 +42,7 @@ fi
 if [[ -n "${SERVER_VERSION}" ]]; then
     # Statically define SERVER_VERSION from variable override
     echo "Statically defined version: ${SERVER_VERSION}"
-    # Assign kubectl version
+    # Assign kubectl version 
     echo "Setting kubectl to version 1.${SERVER_VERSION}"
     cp -f "/usr/local/bin/kubectl1.${SERVER_VERSION}" /usr/local/bin/kubectl 2>/dev/null
 else
@@ -58,10 +58,7 @@ else
     if (( "$SERVER_VERSION" == "19" )); then cp -f /usr/local/bin/kubectl1.19 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" == "20" )); then cp -f /usr/local/bin/kubectl1.20 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" == "21" )); then cp -f /usr/local/bin/kubectl1.21 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" == "22" )); then cp -f /usr/local/bin/kubectl1.22 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" == "23" )); then cp -f /usr/local/bin/kubectl1.23 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" == "24" )); then cp -f /usr/local/bin/kubectl1.24 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" >= "25" )); then cp -f /usr/local/bin/kubectl1.25 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" >= "22" )); then cp -f /usr/local/bin/kubectl1.22 /usr/local/bin/kubectl; fi 2>/dev/null
     [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
 fi
 
@@ -80,7 +77,7 @@ if [[ -n "${KUBE_CTL_TEST_VERSION}" ]]; then
         fatal "Version Mismatch!!!"
         exit 1
     fi
-fi
+fi    
 
 DEPLOYMENT_FILE=${deployment_file}-$(date '+%y-%m-%d_%H-%M-%S').yml
 $(dirname $0)/template.sh "$deployment_file" > "$DEPLOYMENT_FILE" || fatal "Failed to apply deployment template on $deployment_file"
