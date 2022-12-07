@@ -4,6 +4,7 @@ RUN apk update && apk add curl
 
 RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd64") && \
     mkdir -p /tmp/kubectl-versions && cd /tmp/kubectl-versions  \
+    curl -o kubectl1.23 -L https://storage.googleapis.com/kubernetes-release/release/v1.23.0/bin/linux/${ARCH}/kubectl && \
     curl -o kubectl1.22 -L https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/${ARCH}/kubectl && \
     curl -o kubectl1.21 -L https://storage.googleapis.com/kubernetes-release/release/v1.21.0/bin/linux/${ARCH}/kubectl && \
     curl -o kubectl1.20 -L https://storage.googleapis.com/kubernetes-release/release/v1.20.0/bin/linux/${ARCH}/kubectl && \
@@ -21,6 +22,8 @@ RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd6
 
 
 FROM debian:bullseye-slim
+
+RUN apt-get update -y && apt-get install busybox -y && ln -s /bin/busybox /usr/bin/[[
 
 RUN adduser --gecos "" --disabled-password --home /home/cfu --shell /bin/bash cfu
 
