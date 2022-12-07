@@ -3,7 +3,7 @@ FROM alpine:3.6 AS builder
 RUN apk update && apk add curl
 
 RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd64") && \
-    mkdir -p /tmp/kubectl-versions && cd /tmp/kubectl-versions  \
+    mkdir -p /tmp/kubectl-versions && cd /tmp/kubectl-versions && \
     curl -o kubectl1.23 -L https://storage.googleapis.com/kubernetes-release/release/v1.23.0/bin/linux/${ARCH}/kubectl && \
     curl -o kubectl1.22 -L https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/${ARCH}/kubectl && \
     curl -o kubectl1.21 -L https://storage.googleapis.com/kubernetes-release/release/v1.21.0/bin/linux/${ARCH}/kubectl && \
@@ -31,7 +31,7 @@ RUN adduser --gecos "" --disabled-password --home /home/cfu --shell /bin/bash cf
 
 #copy all versions of kubectl to switch between them later.
 COPY --chown=cfu --chmod=775 --from=builder /tmp/kubectl-versions/* /usr/local/bin/
-RUN cp /usr/local/bin/kubectl1.10 /usr/local/bin/kubectl
+COPY --chown=cfu --chmod=775 --from=builder /tmp/kubectl-versions/kubectl1.10 /usr/local/bin/kubectl
 
 WORKDIR /
 ADD --chown=cfu --chmod=775 cf-deploy-kubernetes.sh /cf-deploy-kubernetes
