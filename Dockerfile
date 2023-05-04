@@ -27,6 +27,8 @@ RUN apt-get update -y && apt-get install busybox -y && ln -s /bin/busybox /usr/b
 
 RUN adduser --gecos "" --disabled-password --home /home/cfu --shell /bin/bash cfu
 
+RUN apt-get remove ncurses dev -y
+
 #RUN apt update && apt upgrade && apt install bash # THIS IS NOT REQUIRED. BASH IS ALREADY INCLUDED IN BULLSEYE
 
 #copy all versions of kubectl to switch between them later.
