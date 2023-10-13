@@ -23,7 +23,13 @@ RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd6
 
 FROM debian:bullseye-slim
 
-RUN apt-get update -y && apt-get install busybox -y && ln -s /bin/busybox /usr/bin/[[
+RUN apt-get update -y && \
+    apt-get install -y \
+    busybox \
+    ncurses-base=6.2+20201114-2+deb11u2 \
+    ncurses-bin=6.2+20201114-2+deb11u2 \
+    libc6=2.31-13+deb11u7 && \
+    ln -s /bin/busybox /usr/bin/[[
 
 RUN adduser --gecos "" --disabled-password --home /home/cfu --shell /bin/bash cfu
 
