@@ -21,7 +21,7 @@ RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd6
     curl -o kubectl1.6 -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/${ARCH}/kubectl
 
 
-FROM debian:bullseye-slim
+FROM debian:11.6-slim
 
 RUN apt-get update -y && apt-get install busybox -y && ln -s /bin/busybox /usr/bin/[[
 
