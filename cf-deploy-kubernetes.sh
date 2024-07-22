@@ -59,7 +59,8 @@ else
     if (( "$SERVER_VERSION" == "20" )); then cp -f /usr/local/bin/kubectl1.20 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" == "21" )); then cp -f /usr/local/bin/kubectl1.21 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" == "22" )); then cp -f /usr/local/bin/kubectl1.22 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" >= "23" )); then cp -f /usr/local/bin/kubectl1.23 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" == "23" )); then cp -f /usr/local/bin/kubectl1.23 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" >= "24" )); then cp -f /usr/local/bin/kubectl1.30 /usr/local/bin/kubectl; fi 2>/dev/null
     [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
 fi
 
