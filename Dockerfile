@@ -25,9 +25,6 @@ RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd6
     curl -o kubectl1.12 -L https://storage.googleapis.com/kubernetes-release/release/v1.12.0/bin/linux/${ARCH}/kubectl && \
     curl -o kubectl1.11 -L https://storage.googleapis.com/kubernetes-release/release/v1.11.0/bin/linux/${ARCH}/kubectl && \
     curl -o kubectl1.10 -L https://storage.googleapis.com/kubernetes-release/release/v1.10.0/bin/linux/${ARCH}/kubectl && \
-    curl -o kubectl1.9 -L https://storage.googleapis.com/kubernetes-release/release/v1.9.0/bin/linux/${ARCH}/kubectl && \
-    curl -o kubectl1.8 -L https://storage.googleapis.com/kubernetes-release/release/v1.8.0/bin/linux/${ARCH}/kubectl && \
-    curl -o kubectl1.7 -L https://storage.googleapis.com/kubernetes-release/release/v1.7.0/bin/linux/${ARCH}/kubectl && \
     curl -o kubectl1.6 -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/${ARCH}/kubectl
 
 
