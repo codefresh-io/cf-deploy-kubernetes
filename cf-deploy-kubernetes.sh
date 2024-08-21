@@ -50,6 +50,13 @@ else
     SERVER_VERSION=$(kubectl version --short=true --context "${KUBECONTEXT}" | grep -i server | cut -d ':' -f2 | cut -d '.' -f2 | sed 's/[^0-9]*//g')
     echo "Server minor version: $SERVER_VERSION"
     if (( "$SERVER_VERSION" <= "6" )); then cp -f /usr/local/bin/kubectl1.6 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" <= "7" )); then cp -f /usr/local/bin/kubectl1.7 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" <= "8" )); then cp -f /usr/local/bin/kubectl1.8 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" <= "9" )); then cp -f /usr/local/bin/kubectl1.9 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" <= "10" )); then cp -f /usr/local/bin/kubectl1.10 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" <= "11" )); then cp -f /usr/local/bin/kubectl1.11 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" <= "12" )); then cp -f /usr/local/bin/kubectl1.12 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" <= "13" )); then cp -f /usr/local/bin/kubectl1.13 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" == "14" )); then cp -f /usr/local/bin/kubectl1.14 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" == "15" )); then cp -f /usr/local/bin/kubectl1.15 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" == "16" )); then cp -f /usr/local/bin/kubectl1.16 /usr/local/bin/kubectl; fi 2>/dev/null
@@ -59,7 +66,14 @@ else
     if (( "$SERVER_VERSION" == "20" )); then cp -f /usr/local/bin/kubectl1.20 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" == "21" )); then cp -f /usr/local/bin/kubectl1.21 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" == "22" )); then cp -f /usr/local/bin/kubectl1.22 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" >= "23" )); then cp -f /usr/local/bin/kubectl1.23 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" == "23" )); then cp -f /usr/local/bin/kubectl1.23 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" >= "24" )); then cp -f /usr/local/bin/kubectl1.24 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" >= "25" )); then cp -f /usr/local/bin/kubectl1.25 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" >= "26" )); then cp -f /usr/local/bin/kubectl1.26 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" >= "27" )); then cp -f /usr/local/bin/kubectl1.27 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" >= "28" )); then cp -f /usr/local/bin/kubectl1.28 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" >= "29" )); then cp -f /usr/local/bin/kubectl1.29 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" >= "30" )); then cp -f /usr/local/bin/kubectl1.30 /usr/local/bin/kubectl; fi 2>/dev/null
     [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
 fi
 
