@@ -1,21 +1,23 @@
 FROM alpine:3.21 AS builder
 
+
 RUN apk update && apk add curl
 
 RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd64") && \
     mkdir -p /tmp/kubectl-versions && cd /tmp/kubectl-versions && \
     curl -o kubectl1.32 -L https://storage.googleapis.com/kubernetes-release/release/v1.32.0/bin/linux/${ARCH}/kubectl
 
-FROM debian:bullseye-slim
+
+FROM debian:bookworm-20240812-slim
+
 
 RUN apt-get update -y && \
     apt-get upgrade && \
     apt-get install busybox -y && \
     ln -s /bin/busybox /usr/bin/[[
 
-RUN adduser --gecos "" --disabled-password --home /home/cfu --shell /bin/bash cfu
 
-#RUN apt update && apt upgrade && apt install bash # THIS IS NOT REQUIRED. BASH IS ALREADY INCLUDED IN BULLSEYE
+RUN adduser --gecos "" --disabled-password --home /home/cfu --shell /bin/bash cfu
 
 #copy all versions of kubectl to switch between them later.
 COPY --chown=cfu --chmod=775 --from=builder /tmp/kubectl-versions/* /usr/local/bin/
