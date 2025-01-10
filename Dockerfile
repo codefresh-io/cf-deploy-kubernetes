@@ -8,7 +8,7 @@ RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd6
     curl -o kubectl1.32 -L https://storage.googleapis.com/kubernetes-release/release/v1.32.0/bin/linux/${ARCH}/kubectl
 
 
-FROM debian:bookworm-20240812-slim
+FROM debian:trixie-slim
 
 
 RUN apt-get update -y && \
