@@ -13,7 +13,7 @@ FROM debian:trixie-slim
 
 RUN apt-get update -y && \
     apt-get upgrade -y && \
-    apt-get install busybox -y && \
+    apt-get install adduser busybox -y && \
     ln -s /bin/busybox /usr/bin/[[
 
 
