@@ -49,17 +49,8 @@ else
     #check the cluster version and decide which version of kubectl to use:
     SERVER_VERSION=$(kubectl version --short=true --context "${KUBECONTEXT}" | grep -i server | cut -d ':' -f2 | cut -d '.' -f2 | sed 's/[^0-9]*//g')
     echo "Server minor version: $SERVER_VERSION"
-    if (( "$SERVER_VERSION" <= "6" )); then cp -f /usr/local/bin/kubectl1.6 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" == "14" )); then cp -f /usr/local/bin/kubectl1.14 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" == "15" )); then cp -f /usr/local/bin/kubectl1.15 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" == "16" )); then cp -f /usr/local/bin/kubectl1.16 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" == "17" )); then cp -f /usr/local/bin/kubectl1.17 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" == "18" )); then cp -f /usr/local/bin/kubectl1.18 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" == "19" )); then cp -f /usr/local/bin/kubectl1.19 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" == "20" )); then cp -f /usr/local/bin/kubectl1.20 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" == "21" )); then cp -f /usr/local/bin/kubectl1.21 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" == "22" )); then cp -f /usr/local/bin/kubectl1.22 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" >= "23" )); then cp -f /usr/local/bin/kubectl1.23 /usr/local/bin/kubectl; fi 2>/dev/null
+
+    if (( "$SERVER_VERSION" >= "30" )); then cp -f /usr/local/bin/kubectl1.32 /usr/local/bin/kubectl; fi 2>/dev/null
     [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
 fi
 
