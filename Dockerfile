@@ -28,7 +28,7 @@ RUN curl -o kubectl1.29 -L https://storage.googleapis.com/kubernetes-release/rel
 RUN curl -o kubectl1.30 -L https://storage.googleapis.com/kubernetes-release/release/v1.30.0/bin/linux/${TARGETARCH}/kubectl
 RUN curl -o kubectl1.31 -L https://storage.googleapis.com/kubernetes-release/release/v1.31.0/bin/linux/${TARGETARCH}/kubectl
 
-FROM debian:bookworm-20250407-slim
+FROM debian:12.11-slim
 WORKDIR /
 RUN adduser --gecos "" --disabled-password --home /home/cfu --shell /bin/bash cfu
 USER cfu
