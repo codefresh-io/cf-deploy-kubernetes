@@ -74,7 +74,6 @@ else
     if (( "$SERVER_VERSION" >= "28" )); then cp -f /usr/local/bin/kubectl1.28 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" >= "29" )); then cp -f /usr/local/bin/kubectl1.29 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" >= "30" )); then cp -f /usr/local/bin/kubectl1.30 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" >= "31" )); then cp -f /usr/local/bin/kubectl1.31 /usr/local/bin/kubectl; fi 2>/dev/null
     [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
 fi
 
