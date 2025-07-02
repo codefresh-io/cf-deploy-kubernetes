@@ -28,7 +28,7 @@ RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd6
     curl -o kubectl1.6 -L https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/${ARCH}/kubectl
 
 
-FROM debian:bookworm-20240812-slim
+FROM debian:12.11-slim
 
 RUN apt-get update -y
 # install busybox by building source until it's unavailable by apt-get for v1.36.1 ad no need to link [[
