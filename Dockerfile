@@ -5,9 +5,7 @@ RUN export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd6
     && mkdir -p /tmp/kubectl-versions && cd /tmp/kubectl-versions \
     && curl -o kubectl1.34 -L https://storage.googleapis.com/kubernetes-release/release/v1.34.1/bin/linux/${ARCH}/kubectl \
     && curl -o kubectl1.33 -L https://storage.googleapis.com/kubernetes-release/release/v1.33.5/bin/linux/${ARCH}/kubectl \
-    && curl -o kubectl1.32 -L https://storage.googleapis.com/kubernetes-release/release/v1.32.9/bin/linux/${ARCH}/kubectl \
-    && curl -o kubectl1.31 -L https://storage.googleapis.com/kubernetes-release/release/v1.31.13/bin/linux/${ARCH}/kubectl \
-    && curl -o kubectl1.30 -L https://storage.googleapis.com/kubernetes-release/release/v1.30.14/bin/linux/${ARCH}/kubectl
+    && curl -o kubectl1.32 -L https://storage.googleapis.com/kubernetes-release/release/v1.32.9/bin/linux/${ARCH}/kubectl
 
 FROM debian:bookworm-20250908-slim AS prod
 RUN apt-get update -y
