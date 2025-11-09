@@ -1,3 +1,6 @@
+# ⚠️ If updating supported `kubectl` versions,
+# please also update `./cf-deploy-kubernetes.sh` accordingly.
+
 ARG DEBIAN_VERSION=bookworm-20251103-slim
 
 
@@ -39,6 +42,7 @@ COPY --chown=cfu --chmod=775 --from=builder /usr/bin/busybox /usr/bin/busybox
 RUN busybox --install
 
 COPY --chown=cfu --chmod=775 --from=builder /kubectl/* /usr/local/bin/
+# ⚠️ Defaults to the latest kubectl version. Please update with new versions as needed.
 RUN ln -s /usr/local/bin/kubectl1.34 /usr/local/bin/kubectl
 
 WORKDIR /
