@@ -1,9 +1,9 @@
-FROM debian:bookworm-20251103-slim AS prod
+FROM debian:trixie-20251103-slim AS prod
 ARG TARGETPLATFORM
-RUN adduser --gecos "" --disabled-password --home /home/cfu --shell /bin/bash cfu
+RUN /sbin/useradd --home /home/cfu --shell /bin/bash cfu
 COPY --chown=cfu --chmod=775 cf-deploy-kubernetes.sh /cf-deploy-kubernetes
 COPY --chown=cfu --chmod=775 template.sh /template.sh
-COPY --from=busybox:1.36.1-musl /bin/busybox /usr/bin/busybox
+COPY --from=busybox:1.37.0-glibc /bin/busybox /usr/bin/busybox
 RUN busybox --install
 # ⚠️ We support 3 most recent minor versions: https://kubernetes.io/releases/
 # Please update `./cf-deploy-kubernetes.sh` accordingly.
