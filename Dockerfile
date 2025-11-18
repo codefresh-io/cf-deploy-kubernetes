@@ -1,4 +1,4 @@
-FROM debian:trixie-20251103-slim AS prod
+FROM debian:trixie-20251117-slim AS prod
 ARG TARGETPLATFORM
 RUN /sbin/useradd --home /home/cfu --shell /bin/bash cfu
 COPY --chown=cfu --chmod=775 cf-deploy-kubernetes.sh /cf-deploy-kubernetes
