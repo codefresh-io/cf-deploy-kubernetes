@@ -47,7 +47,7 @@ if [[ -n "${SERVER_VERSION}" ]]; then
     cp -f "/usr/local/bin/kubectl1.${SERVER_VERSION}" /usr/local/bin/kubectl 2>/dev/null
 else
     #check the cluster version and decide which version of kubectl to use:
-    SERVER_VERSION=$(kubectl version --short=true --context "${KUBECONTEXT}" | grep -i server | cut -d ':' -f2 | cut -d '.' -f2 | sed 's/[^0-9]*//g')
+    SERVER_VERSION=$(kubectl version --context "${KUBECONTEXT}" | grep -i server | cut -d ':' -f2 | cut -d '.' -f2 | sed 's/[^0-9]*//g')
     echo "Server minor version: $SERVER_VERSION"
     if (( "$SERVER_VERSION" >= "32" )); then cp -f /usr/local/bin/kubectl1.32 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" >= "33" )); then cp -f /usr/local/bin/kubectl1.33 /usr/local/bin/kubectl; fi 2>/dev/null
@@ -57,7 +57,7 @@ fi
 
 # Simple testing logic for making sure override versions are set
 if [[ -n "${KUBE_CTL_TEST_VERSION}" ]]; then
-    KUBE_CTL_VERSION=`kubectl version --client --short`
+    KUBE_CTL_VERSION=`kubectl version --client`
     echo "Testing kubectl version is set..."
     if [[ "${KUBE_CTL_VERSION}" == *"${KUBE_CTL_TEST_VERSION}"* ]]; then
         echo "Version correctly set"
