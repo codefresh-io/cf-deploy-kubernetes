@@ -1,4 +1,4 @@
-FROM debian:trixie-20251117-slim AS prod
+FROM debian:trixie-20251229-slim AS prod
 ARG TARGETPLATFORM
 RUN /sbin/useradd --home /home/cfu --shell /bin/bash cfu
 COPY --chown=cfu --chmod=775 cf-deploy-kubernetes.sh /cf-deploy-kubernetes
@@ -7,9 +7,9 @@ COPY --from=busybox:1.37.0-glibc /bin/busybox /usr/bin/busybox
 RUN busybox --install
 # ⚠️ We support 3 most recent minor versions: https://kubernetes.io/releases/
 # Please update `./cf-deploy-kubernetes.sh` accordingly.
-ADD --chown=cfu --chmod=775 https://dl.k8s.io/release/v1.34.2/bin/${TARGETPLATFORM}/kubectl /usr/local/bin/kubectl1.34
-ADD --chown=cfu --chmod=775 https://dl.k8s.io/release/v1.33.6/bin/${TARGETPLATFORM}/kubectl /usr/local/bin/kubectl1.33
-ADD --chown=cfu --chmod=775 https://dl.k8s.io/release/v1.32.10/bin/${TARGETPLATFORM}/kubectl /usr/local/bin/kubectl1.32
+ADD --chown=cfu --chmod=775 https://dl.k8s.io/release/v1.34.3/bin/${TARGETPLATFORM}/kubectl /usr/local/bin/kubectl1.34
+ADD --chown=cfu --chmod=775 https://dl.k8s.io/release/v1.33.7/bin/${TARGETPLATFORM}/kubectl /usr/local/bin/kubectl1.33
+ADD --chown=cfu --chmod=775 https://dl.k8s.io/release/v1.32.11/bin/${TARGETPLATFORM}/kubectl /usr/local/bin/kubectl1.32
 # ⚠️ Defaults to the latest version. Please update with new versions as needed.
 RUN ln -s /usr/local/bin/kubectl1.34 /usr/local/bin/kubectl
 
