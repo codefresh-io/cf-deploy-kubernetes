@@ -1,5 +1,6 @@
 # DHI source: https://hub.docker.com/repository/docker/octopusdeploy/dhi-debian-base/customizations/8303889275873263714
-FROM octopusdeploy/dhi-debian-base:trixie_cf-classic-deploy-kubernetes-debian13@sha256:ffb200209298d12083c0b10a779cc2536d9ad975b18d422d79e533fd9bd59376 AS prod
+FROM octopusdeploy/dhi-debian-base:trixie_cf-classic-deploy-kubernetes-debian13@sha256:b7736403612d28976e9b706e9674f2ec1e19ff496729eb4ea2073a0187227840 AS prod
+RUN busybox --install
 COPY --chown=nonroot --chmod=775 cf-deploy-kubernetes.sh /cf-deploy-kubernetes
 COPY --chown=nonroot --chmod=775 template.sh /template.sh
 # ⚠️ We support 3 most recent minor versions: https://kubernetes.io/releases/
