@@ -9,7 +9,7 @@ COPY --chown=nonroot --chmod=775 --from=octopusdeploy/dhi-kubectl:1.35-debian13 
 COPY --chown=nonroot --chmod=775 --from=octopusdeploy/dhi-kubectl:1.34-debian13 /usr/local/bin/kubectl /usr/local/bin/kubectl1.34
 COPY --chown=nonroot --chmod=775 --from=octopusdeploy/dhi-kubectl:1.33-debian13 /usr/local/bin/kubectl /usr/local/bin/kubectl1.33
 # ⚠️ Defaults to the latest version. Please update with new versions as needed.
-RUN ln -s /usr/local/bin/kubectl1.36 /usr/local/bin/kubectl
+RUN ln -s /usr/local/bin/kubectl1.35 /usr/local/bin/kubectl
 
 WORKDIR /
 USER nonroot
