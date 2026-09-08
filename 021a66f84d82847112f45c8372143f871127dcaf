@@ -1,0 +1,16 @@
+Dockerfile
+  h_104939d4aa3383 2
+service.yaml
+  h_104939d4aa3383 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.11",
+  "base_commit_sha": "021a66f84d82847112f45c8372143f871127dcaf",
+  "prompts": {},
+  "humans": {
+    "h_104939d4aa3383": {
+      "author": "Vasil Sudakou <vasil.sudakov@codefresh.io>"
+    }
+  }
+}
