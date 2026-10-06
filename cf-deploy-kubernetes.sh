@@ -49,9 +49,9 @@ else
     #check the cluster version and decide which version of kubectl to use:
     SERVER_VERSION=$(kubectl version --context "${KUBECONTEXT}" | grep -i server | cut -d ':' -f2 | cut -d '.' -f2 | sed 's/[^0-9]*//g')
     echo "Server minor version: $SERVER_VERSION"
-    if (( "$SERVER_VERSION" >= "33" )); then cp -f /usr/local/bin/kubectl1.33 /usr/local/bin/kubectl; fi 2>/dev/null
-    if (( "$SERVER_VERSION" >= "34" )); then cp -f /usr/local/bin/kubectl1.34 /usr/local/bin/kubectl; fi 2>/dev/null
     if (( "$SERVER_VERSION" >= "35" )); then cp -f /usr/local/bin/kubectl1.35 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" >= "36" )); then cp -f /usr/local/bin/kubectl1.36 /usr/local/bin/kubectl; fi 2>/dev/null
+    if (( "$SERVER_VERSION" >= "37" )); then cp -f /usr/local/bin/kubectl1.37 /usr/local/bin/kubectl; fi 2>/dev/null
     [ ! -f "${deployment_file}" ] && echo "Couldn't find $deployment_file file at $(pwd)" && exit 1;
 fi
 
