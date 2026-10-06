@@ -1,5 +1,5 @@
 # DHI source: https://hub.docker.com/repository/docker/octopusdeploy/dhi-debian-base/customizations/8303889275873263714
-FROM octopusdeploy/dhi-debian-base:trixie_cf-classic-deploy-kubernetes-debian13@sha256:sha256:1b7a14ef1f59efa395bc64081f24a26ccb20c886c22a73ddf1a8f41d1adebfb1 AS prod
+FROM octopusdeploy/dhi-debian-base:trixie_cf-classic-deploy-kubernetes-debian13@sha256:1b7a14ef1f59efa395bc64081f24a26ccb20c886c22a73ddf1a8f41d1adebfb1 AS prod
 RUN busybox --install
 COPY --chown=nonroot --chmod=775 cf-deploy-kubernetes.sh /cf-deploy-kubernetes
 COPY --chown=nonroot --chmod=775 template.sh /template.sh
