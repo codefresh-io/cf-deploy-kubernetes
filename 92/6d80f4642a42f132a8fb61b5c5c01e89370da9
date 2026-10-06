@@ -1,0 +1,16 @@
+service.yaml
+  h_48b74706cf95a4 1
+Dockerfile
+  h_48b74706cf95a4 2,9-10,12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "926d80f4642a42f132a8fb61b5c5c01e89370da9",
+  "prompts": {},
+  "humans": {
+    "h_48b74706cf95a4": {
+      "author": "Bohdan Pysarenko <bohdan.pisarenko@octopus.com>"
+    }
+  }
+}
