@@ -1,0 +1,14 @@
+cf-deploy-kubernetes.sh
+  h_48b74706cf95a4 53-54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "527462e3f7c5de48fd8513aef291996f81cd2b93",
+  "prompts": {},
+  "humans": {
+    "h_48b74706cf95a4": {
+      "author": "Bohdan Pysarenko <bohdan.pisarenko@octopus.com>"
+    }
+  }
+}
