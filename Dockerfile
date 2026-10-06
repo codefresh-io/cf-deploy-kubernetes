@@ -6,8 +6,8 @@ COPY --chown=nonroot --chmod=775 template.sh /template.sh
 # ⚠️ We support 3 most recent minor versions: https://kubernetes.io/releases/
 # Please update `./cf-deploy-kubernetes.sh` accordingly.
 COPY --chown=nonroot --chmod=775 --from=octopusdeploy/dhi-kubectl:1.35-debian13 /usr/local/bin/kubectl /usr/local/bin/kubectl1.35
-COPY --chown=nonroot --chmod=775 --from=octopusdeploy/dhi-kubectl:1.36-debian13 /usr/local/bin/kubectl /usr/local/bin/kubectl1.34
-COPY --chown=nonroot --chmod=775 --from=octopusdeploy/dhi-kubectl:1.37-debian13 /usr/local/bin/kubectl /usr/local/bin/kubectl1.33
+COPY --chown=nonroot --chmod=775 --from=octopusdeploy/dhi-kubectl:1.36-debian13 /usr/local/bin/kubectl /usr/local/bin/kubectl1.36
+COPY --chown=nonroot --chmod=775 --from=octopusdeploy/dhi-kubectl:1.37-debian13 /usr/local/bin/kubectl /usr/local/bin/kubectl1.37
 # ⚠️ Defaults to the latest version. Please update with new versions as needed.
 RUN ln -s /usr/local/bin/kubectl1.37 /usr/local/bin/kubectl
 
